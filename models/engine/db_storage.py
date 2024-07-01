@@ -1,7 +1,7 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from models.base_model import Base
+from models.base_model import BaseModel
 from models.state import State
 from models.city import City
 
@@ -19,7 +19,7 @@ class DBStorage:
         self.__engine = create_engine(f'mysql+mysqldb://{user}:{password}@{host}/{db}', pool_pre_ping=True)
 
         if os.getenv('HBNB_ENV') == 'test':
-            Base.metadata.drop_all(self.__engine)
+            BaseModel.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """Query all objects or those of a specific class."""
@@ -53,7 +53,7 @@ class DBStorage:
 
     def reload(self):
         """Create all tables in the database and create the current database session."""
-        Base.metadata.create_all(self.__engine)
+        BaseModel.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
