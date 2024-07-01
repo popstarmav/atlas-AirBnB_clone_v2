@@ -11,7 +11,7 @@ Base = declarative_base()
 class BaseModel():
     """A base class for all hbnb models"""
 
-    id = Column(string(60), primary_key=True, nullable=False)
+    id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
@@ -23,8 +23,16 @@ class BaseModel():
             self.updated_at = datetime.now()
         else:
             for k, v in kwargs.items():
-                if not hasattr(self, k):
-                    setattr(self, k, v)
+                if k == 'created_at' or k == 'updated_at':
+                    value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+                if k != '__class__':
+                    setattr(self, k, value)
+            if 'id' not in kwargs:
+                self.id = str(uuid.uuid4())
+            if 'created_at' not in kwargs:
+                self.created_at = datetime.now()
+            if 'updated_at' not in kwargs:
+                self.updated_at = datetime.now()
 
     def __str__(self):
         """Returns a string representation of the instance"""
