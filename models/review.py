@@ -4,7 +4,19 @@ from models.base_model import BaseModel
 
 
 class Review(BaseModel):
-    """ Review classto store review information """
-    place_id = ""
-    user_id = ""
-    text = ""
+    from models import storage_type
+    __tablename__ = 'Review'
+
+    if  storage_type == 'db"':
+        place_id = Column(String(60), ForeignKey('place.id'), nullable=False)
+        user_id = Column(String(60), ForeignKey("user.id"), nullable=False)
+        text = Column(String(1024), nullable=False)
+    else:
+        storage_type = ""
+        place_id = ""
+        user_id = ""
+        text = ""
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
