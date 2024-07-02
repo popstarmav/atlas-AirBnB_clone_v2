@@ -1,15 +1,27 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
-from models.base_model import BaseModel
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
-from .base_model import BaseModel, Base
+from models.base_model import BaseModel, Base
+from models.amenity import Amenity
+from models.review import Review
+import models
+metadata = Base.metadata
 
-class Place(BaseModel):
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False),
+                      )
+class Place(BaseModel, Base):
     from models import storage_type
     __tablename__ = 'places'
 
-    if models.storage_type == 'db':
+    if storage_type == 'db':
+
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
         name = Column(String(128), nullable=False)
@@ -38,3 +50,35 @@ class Place(BaseModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    if storage_type != 'db':
+        @property
+        def reviews(self):
+            """review getter"""
+            review_list = []
+            reviews = list(models.storage.all(Review).values)
+            for review in reviews:
+                if review.place_id == self.id:
+                    review_list.append(review)
+            return review_list
+        
+        @property
+        def amenities(self):
+            """getter for amenities"""
+            amenities_list = []
+            amenities = list(models.storage.all(Amenity).values)
+            for amenity in amenities:
+                if amenity.id in self.amenity_ids:
+                    amenities_list.append(amenity)
+            return amenities_list
+        
+        @amenities.setter
+        def amenities(self, obj):
+            """add an amenity"""
+            if type(obj) == Amenity:
+                self.amenity_ids.append(obj.id)
+    else:
+        reviews = relationship(
+            'Review', cascade='all, delete', backref='place')
+        amenities = relationship(
+            'Amenity', secondary=place_amenity, viewonly=False,
+            backref='place_amenities')
