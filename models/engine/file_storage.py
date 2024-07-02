@@ -54,12 +54,20 @@ class FileStorage:
         try:
             with open(self.__file_path, 'r') as f:
                 temp = json.load(f)
-                for key, val in temp.items():
-                        self.all()[key] = classes[val['__class__']](**val)
+            for key, val in temp.items():
+                try:
+                    cls_name = val['__class__']
+                    if cls_name in classes:
+                        self.__objects[key] = classes[cls_name](**val)
+                except KeyError as e:
+                    print(f"Error loading {key}: Missing key {e}")
+                except Exception as e:
+                    print(f"Error loading {key}: {type(e).__name__}: {str(e)}")
         except FileNotFoundError:
-            self.__objects = {}
-        except json.JSONDecodeError:
-            self.__objects = {}
+            self.__objects = {}  # Initialize as empty if file is missing
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON: {str(e)}")
+            self.__objects = {}  # Handle invalid JSON content
 
     def close(self):
         self.reload()

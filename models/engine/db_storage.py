@@ -25,11 +25,19 @@ class DBStorage:
     def all(self, cls=None):
         objects = {}
         if cls:
-            objects = {obj.id: obj for obj in self.__session.query(cls).all()}
+            try:
+                objects = {obj.id: obj for obj in self.__session.query(cls).all()}
+            except SQLAlchemyError as e:
+                print(f"Error querying {cls.__name__}: {str(e)}")
+                objects = {}
         else:
-            for clazz in [State, City]:  # Add other classes here
-                for obj in self.__session.query(clazz).all():
-                    objects[obj.id] = obj
+            try:
+                for clazz in [State, City]:  # Add other classes here
+                    for obj in self.__session.query(clazz).all():
+                        objects[obj.id] = obj
+            except SQLAlchemyError as e:
+                print(f"Error querying all classes: {str(e)}")
+                objects = {}
         return objects
 
     def new(self, obj):
