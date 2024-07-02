@@ -40,8 +40,10 @@ class BaseModel:
 
     def to_dict(self):
         dict_copy = self.__dict__.copy()
-        dict_copy['created_at'] = self.created_at.isoformat()
-        dict_copy['updated_at'] = self.updated_at.isoformat()
+        if isinstance(dict_copy['created_at'], datetime):
+            dict_copy['created_at'] = self.created_at.isoformat()
+        if isinstance(dict_copy['updated_at'], datetime):
+            dict_copy['updated_at'] = self.updated_at.isoformat()
         dict_copy["__class__"] = self.__class__.__name__
         if "_sa_instance_state" in dict_copy:
             dict_copy.pop('_sa_instance_state', None)
