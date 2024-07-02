@@ -5,6 +5,7 @@ from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import models
+import uuid
 
 Base = declarative_base()
 
@@ -27,10 +28,15 @@ class BaseModel:
                     setattr(self, k, v)
         if not kwargs.get('id'):
             self.id = str(uuid.uuid4())
+        if 'created_at' not in kwargs:
+            self.created_at = datetime.now()
+        if 'updated_at' not in kwargs:
+            self.updated_at = datetime.now()
 
     def to_dict(self):
         dict_copy = self.__dict__.copy()
-        dict_copy.pop('_sa_instance_state', None)
         dict_copy['created_at'] = self.created_at.isoformat()
         dict_copy['updated_at'] = self.updated_at.isoformat()
+        if "_sa_instance_state" in dict_copy:
+            dict_copy.pop('_sa_instance_state', None)
         return dict_copy

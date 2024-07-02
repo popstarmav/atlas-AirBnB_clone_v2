@@ -3,21 +3,25 @@
 import models
 from models.base_model import BaseModel, Base
 from os import getenv
-import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 class User(BaseModel, Base):
     """This class defines a user by various attributes"""
-    if models.storage_t == 'db':
-        __tablename__ = 'users'
+    __tablename__ = 'users'
+    if models.storage_type == 'db':
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=False)
         last_name = Column(String(128), nullable=False)
         places = relationship('Place', back_populates='user', cascade='all, delete')
     else:
+
         email = ""
         password = ""
         first_name = ""
         last_name = ""
+
+    def __init__(self, *args, **kwargs):
+        """initialization of user"""
+        super().__init__(*args, **kwargs)
