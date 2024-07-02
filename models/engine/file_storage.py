@@ -18,7 +18,7 @@ class FileStorage:
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
-        k = f"{obj.__class__.__name__}+'.'+ {obj.id}"
+        k = f"{obj.__class__.__name__}.{obj.id}"
         self.__objects[k] = obj
 
     def save(self):
@@ -32,7 +32,7 @@ class FileStorage:
         if obj is None:
             return
         if obj:
-            k = f"{obj.__class__.__name__}+'.'+ {obj.id}"
+            k = f"{obj.__class__.__name__}.{obj.id}"
         if k in self.__objects:
             del self.__objects[k]
 

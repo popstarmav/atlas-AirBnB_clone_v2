@@ -29,15 +29,22 @@ class BaseModel:
                     setattr(self, k, v)
         if not kwargs.get('id'):
             self.id = str(uuid.uuid4())
-        if 'created_at' not in kwargs:
+        if 'created_at' in kwargs:
+            kwargs['created_at'] = datetime.strptime(kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
+        else:
             self.created_at = datetime.now()
-        if 'updated_at' not in kwargs:
+        if 'updated_at' in kwargs:
+            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
+        else:
             self.updated_at = datetime.now()
 
     def to_dict(self):
         dict_copy = self.__dict__.copy()
-        dict_copy['created_at'] = self.created_at.isoformat()
-        dict_copy['updated_at'] = self.updated_at.isoformat()
+        if isinstance(dict_copy['created_at'], datetime):
+            dict_copy['created_at'] = self.created_at.isoformat()
+        if isinstance(dict_copy['updated_at'], datetime):
+            dict_copy['updated_at'] = self.updated_at.isoformat()
+        dict_copy["__class__"] = self.__class__.__name__
         if "_sa_instance_state" in dict_copy:
             dict_copy.pop('_sa_instance_state', None)
         return dict_copy

@@ -6,6 +6,19 @@ from sqlalchemy.exc import SQLAlchemyError
 from models.base_model import Base
 from models.state import State
 from models.city import City
+from models.user import User
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+
+classes = {
+            "City": City,
+            "State": State,
+            "User": User,
+            "Place": Place,
+            "Review": Review,
+            "Amenity": Amenity,
+        }
 
 class DBStorage:
     __engine = None
@@ -32,7 +45,7 @@ class DBStorage:
                 objects = {}
         else:
             try:
-                for clazz in [State, City]:  # Add other classes here
+                for clazz in classes:  # Add other classes here
                     for obj in self.__session.query(clazz).all():
                         objects[obj.id] = obj
             except SQLAlchemyError as e:

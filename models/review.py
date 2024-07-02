@@ -5,7 +5,7 @@ from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
 
-class Review(BaseModel):
+class Review(BaseModel, Base):
     from models import storage_type
     __tablename__ = 'Review'
 
