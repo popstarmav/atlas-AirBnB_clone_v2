@@ -14,7 +14,6 @@ from models.review import Review
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
-
     # determines prompt for interactive/non-interactive modes
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
@@ -224,21 +223,22 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        print_list = []
+        obj_list = []
+        objects = storage.all()
 
         if args:
-            args = args.split(' ')[0]  # remove possible trailing args
+            args = args.split(' ')[0]  # Remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+        for k, v in objects.items():
+            if k.split('.')[0] == args:
+                obj_list.append("[{}] ({}) {}".format(v.__class__.__name__, v.id, v.to_dict()))
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+            for v in objects.values():
+                obj_list.append("[{}] ({}) {}".format(v.__class__.__name__, v.id, v.to_dict()))
 
-        print(print_list)
+        print(obj_list)
 
     def help_all(self):
         """ Help information for the all command """
