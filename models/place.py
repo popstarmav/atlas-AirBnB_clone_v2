@@ -7,6 +7,7 @@ from .base_model import BaseModel, Base
 
 class Place(BaseModel):
     from models import storage_type
+    __tablename__ = 'places'
 
     if storage_type == 'db':
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
