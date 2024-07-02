@@ -4,7 +4,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-import models
 import uuid
 
 Base = declarative_base()
@@ -15,10 +14,12 @@ class BaseModel:
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def save(self):
+        import models
         models.storage.new(self)
         models.storage.save()
 
     def delete(self):
+        import models
         models.storage.delete(self)
 
     def __init__(self, *args, **kwargs):
