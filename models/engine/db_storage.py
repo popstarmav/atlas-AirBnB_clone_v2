@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import os
-import sys
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import SQLAlchemyError
@@ -36,21 +35,16 @@ class DBStorage:
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
-
     def all(self, cls=None):
-        objects = {}
-        try:
-            if cls:
-                if isinstance(cls, str):
-                    cls = getattr(sys.modules[__name__], cls)  # Get class dynamically by name
-                    objects = {obj.id: obj for obj in self.__session.query(cls).all()}
-            else:
-                for class_ in classes.values():
-                    objects.update({obj.id: obj for obj in self.__session.query(class_).all()})
-        except SQLAlchemyError as e:
-            print(f"Error querying {cls.__name__ if cls else 'all classes'}: {str(e)}")
-            objects = {}
-        return objects
+        """query on the current database session"""
+        new_dict = {}
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
 
     def new(self, obj):
         self.__session.add(obj)
