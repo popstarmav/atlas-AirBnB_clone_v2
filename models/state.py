@@ -9,7 +9,7 @@ class State(BaseModel, Base):
     from models import storage_type
     
     __tablename__ = 'states'
-    if models.storage_type == 'db':
+    if storage_type == 'db':
         name = Column(String(128), nullable=False)
         cities = relationship('City', backref='state', cascade='all, delete-orphan', passive_deletes=True)
     else:

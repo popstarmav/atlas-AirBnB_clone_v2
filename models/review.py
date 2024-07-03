@@ -4,12 +4,11 @@ from models.base_model import BaseModel
 from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
-
 class Review(BaseModel, Base):
     from models import storage_type
     __tablename__ = 'Review'
 
-    if models.storage_type == 'db':
+    if storage_type == 'db':
         place_id = Column(String(60), ForeignKey('place.id'), nullable=False)
         user_id = Column(String(60), ForeignKey("user.id"), nullable=False)
         text = Column(String(1024), nullable=False)
