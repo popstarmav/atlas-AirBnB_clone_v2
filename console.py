@@ -223,19 +223,22 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
+        import shlex
         obj_list = []
-        objects = storage.all()
+        arg = shlex.split(args)
 
-        if args:
-            args = args.split(' ')[0]  # Remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
+        if len(arg) == 0:
+            objects = storage.all()
+        
+        elif arg[0] in HBNBCommand.classes:
+            objects = storage.all(HBNBCommand.classes[arg[0]])
+
+        else:
+            print("** class doesn't exist **")
+            return
+        
         for k, v in objects.items():
             if k.split('.')[0] == args:
-                obj_list.append("[{}] ({}) {}".format(v.__class__.__name__, v.id, v.to_dict()))
-        else:
-            for v in objects.values():
                 obj_list.append("[{}] ({}) {}".format(v.__class__.__name__, v.id, v.to_dict()))
 
         print(obj_list)
