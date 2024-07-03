@@ -125,7 +125,7 @@ class HBNBCommand(cmd.Cmd):
             return
         
         new_instance = self.classes[class_name]()
-        
+        print(f"new instance created")
         for param in args[1:]:
             key_value = param.split("=", 1)
             if len(key_value) != 2:
@@ -146,6 +146,7 @@ class HBNBCommand(cmd.Cmd):
             setattr(new_instance, key, value)
         
         new_instance.save()
+        print(f"new_instance saved")
         print(new_instance.id)
 
 

@@ -34,6 +34,12 @@ class Place(BaseModel, Base):
         longitude = Column(Float, nullable=True)
         amenity_ids = []
         reviews = relationship("Review", back_populates="place", cascade="all, delete-orphan")
+        reviews = relationship(
+            'Review', cascade='all, delete', backref='place')
+        amenities = relationship(
+            'Amenity', secondary=place_amenity, viewonly=False,
+            backref='place_amenities')
+
     else:
         city_id = ''
         user_id = ''
@@ -76,9 +82,3 @@ class Place(BaseModel, Base):
             """add an amenity"""
             if type(obj) == Amenity:
                 self.amenity_ids.append(obj.id)
-    else:
-        reviews = relationship(
-            'Review', cascade='all, delete', backref='place')
-        amenities = relationship(
-            'Amenity', secondary=place_amenity, viewonly=False,
-            backref='place_amenities')

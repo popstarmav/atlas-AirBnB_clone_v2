@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import sys
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import SQLAlchemyError
@@ -25,32 +26,30 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-                                      .format(os.getenv('HBNB_MYSQL_USER'),
-                                              os.getenv('HBNB_MYSQL_PWD'),
-                                              os.getenv('HBNB_MYSQL_HOST'),
-                                              os.getenv('HBNB_MYSQL_DB')),
+        user = os.getenv('HBNB_MYSQL_USER')
+        pwd = os.getenv('HBNB_MYSQL_PWD')
+        host = os.getenv('HBNB_MYSQL_HOST')
+        db = os.getenv('HBNB_MYSQL_DB')
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
+                                      format(user, pwd, host, db),
                                       pool_pre_ping=True)
-
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
+
     def all(self, cls=None):
         objects = {}
-        if cls:
-            try:
-                objects = {obj.id: obj for obj in self.__session.query(cls).all()}
-            except SQLAlchemyError as e:
-                print(f"Error querying {cls.__name__}: {str(e)}")
-                objects = {}
-        else:
-            try:
-                for clazz in classes:  # Add other classes here
-                    for obj in self.__session.query(clazz).all():
-                        objects[obj.id] = obj
-            except SQLAlchemyError as e:
-                print(f"Error querying all classes: {str(e)}")
-                objects = {}
+        try:
+            if cls:
+                if isinstance(cls, str):
+                    cls = getattr(sys.modules[__name__], cls)  # Get class dynamically by name
+                    objects = {obj.id: obj for obj in self.__session.query(cls).all()}
+            else:
+                for class_ in classes.values():
+                    objects.update({obj.id: obj for obj in self.__session.query(class_).all()})
+        except SQLAlchemyError as e:
+            print(f"Error querying {cls.__name__ if cls else 'all classes'}: {str(e)}")
+            objects = {}
         return objects
 
     def new(self, obj):
@@ -65,6 +64,7 @@ class DBStorage:
 
     def reload(self):
         Base.metadata.create_all(self.__engine)
+        print(" Tables should be created. ")
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
