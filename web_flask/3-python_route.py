@@ -54,7 +54,7 @@ def show_pythontext(text='is cool'):
     Replaces underscores in the text variable with spaces and
     returns a string with "Python ":
     """
-
+    return 'python ' + text.replace('_', ' ')
 
 if __name__ == '__main__':
     # Run Flask app on host 0.0.0.0 and port 5000
