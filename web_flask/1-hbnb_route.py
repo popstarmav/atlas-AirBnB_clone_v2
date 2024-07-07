@@ -19,6 +19,7 @@ def hello_hbnb():
     """
     return "Hello HBNB!"
 
+
 @app.route('/hbnb', strict_slashes=False)
 def display_hbnb():
     """
@@ -26,6 +27,7 @@ def display_hbnb():
     Returns str: Display "HBNB" on webpage
     """
     return "HBNB"
+
 
 if __name__ == '__main__':
     # Run Flask app on host 0.0.0.0 and port 5000
