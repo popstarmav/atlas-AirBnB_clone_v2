@@ -46,15 +46,21 @@ def show_c_text(text):
     return 'C ' + text.replace('_', ' ')
 
 
-@app.route('/python', strict_slashes=False)
-@app.route('python/<text>', strict_slashes=False)
-def show_pythontext(text='is cool'):
+@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
+def show_pythontext(text):
     """
     Route handler for URL pattern '/python/' or '/python/<text>'
     Replaces underscores in the text variable with spaces and
     returns a string with "Python ":
+
+    Args:
+        text (str): The text to display after "Python "
+    
+    Returns:
+        str: The string "Python " followed by the modified text
     """
-    return 'python ' + text.replace('_', ' ')
+    return 'Python ' + text.replace('_', ' ')
 
 if __name__ == '__main__':
     # Run Flask app on host 0.0.0.0 and port 5000
