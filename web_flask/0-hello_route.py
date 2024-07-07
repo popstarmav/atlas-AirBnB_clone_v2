@@ -12,10 +12,7 @@ app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
-
-
 def hello_hbnb():
-
     """
     Route Handler for the root URL ('/').
     Returns str: Display "Hello HBNB!" on webpage.
