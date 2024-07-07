@@ -1,0 +1,32 @@
+#!/usr/bin/python3
+"""
+Simple flask app script
+App listen on '0.0.0.0'
+Port 5000 and defines one route
+"""
+
+from flask import Flask
+
+# Initialize the flask application
+app = Flask(__name__)
+
+
+@app.route('/', strict_slashes=False)
+def hello_hbnb():
+    """
+    Route Handler for the root URL ('/').
+    Returns str: Display "Hello HBNB!" on webpage.
+    """
+    return "Hello HBNB!"
+
+@app.route('/hbnb', strict_slashes=False)
+def display_hbnb():
+    """
+    Route Handler for the root URL ('/hbnb')
+    Returns str: Display "HBNB" on webpage
+    """
+    return "HBNB"
+
+if __name__ == '__main__':
+    # Run Flask app on host 0.0.0.0 and port 5000
+    app.run(host='0.0.0.0', port=5000)
