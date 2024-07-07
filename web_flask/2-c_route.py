@@ -35,7 +35,7 @@ def show_c_text(text):
     Route handler for the URl pattern '/c/<text>'.
     Replaces underscores in text variable with spaces and
     Returns the string starting with "C :"
-   
+
     Args:
         text (str): The text to display after "C ".
 
