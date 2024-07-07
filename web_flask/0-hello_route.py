@@ -15,11 +15,13 @@ app = Flask(__name__)
 
 
 def hello_hbnb():
+
     """
     Route Handler for the root URL ('/').
     Returns str: Display "Hello HBNB!" on webpage.
     """
     return "Hello HBNB!"
+
 
 if __name__ == '__main__':
     # Run Flask app on host 0.0.0.0 and port 5000
