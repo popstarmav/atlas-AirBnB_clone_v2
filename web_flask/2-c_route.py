@@ -43,8 +43,7 @@ def show_c_text(text):
         str: The string "C " followed by the modified text.
     """
     # Replace underscores with spaces in the text variable
-    modified_text = text_replace('_', ' ')
-    return f"C {modified_text}"
+    return 'C ' + text.replace('_', ' ')
 
 
 if __name__ == '__main__':
