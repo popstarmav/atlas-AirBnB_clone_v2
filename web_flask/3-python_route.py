@@ -56,11 +56,12 @@ def show_pythontext(text):
 
     Args:
         text (str): The text to display after "Python "
-    
+
     Returns:
         str: The string "Python " followed by the modified text
     """
     return 'Python ' + text.replace('_', ' ')
+
 
 if __name__ == '__main__':
     # Run Flask app on host 0.0.0.0 and port 5000
