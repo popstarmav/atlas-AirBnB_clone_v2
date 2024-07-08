@@ -62,6 +62,7 @@ def show_pythontext(text):
     """
     return 'Python ' + text.replace('_', ' ')
 
+
 @app.route('/number/<int:n>', strict_slashes=False)
 def show_number(n):
     """
@@ -69,7 +70,7 @@ def show_number(n):
     Display "n is a number" only if n is an int
 
     Args:
-        n (int): The integer to display
+    n (int): The integer to display
     
     Returns:
         str: The string "<n> is a number"
