@@ -71,7 +71,7 @@ def show_number(n):
 
     Args:
     n (int): The integer to display
-    
+
     Returns:
         str: The string "<n> is a number"
     """
