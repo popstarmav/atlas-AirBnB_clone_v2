@@ -106,7 +106,12 @@ def number_odd_or_even(n):
     Return:
         str: Html content with odd or even number
     """
-    return render_template('6-number_odd_or_even.html', n=n)
+    even_or_odd = "even" if n % 2 == 0 else 'odd'
+    values = {
+        "number": n,
+        "even_or_odd": even_or_odd
+    }
+    return render_template('6-number_odd_or_even.html', values=values)
 
 
 if __name__ == '__main__':
