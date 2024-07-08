@@ -84,10 +84,10 @@ def number_template(n):
     """
     Route handler for URL pattern '/number_template/<int:n>'
     Display an HTML page with number only if n is a int
-    
+
     Args:
         n (int): The integer to display.
-    
+
     Returns:
         str: The HTML content with the number.
     """
