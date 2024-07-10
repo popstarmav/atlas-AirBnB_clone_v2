@@ -31,7 +31,7 @@ class State(BaseModel, Base if storage_type == 'db' else object):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
     
-    if storage_type != 'db':
+    if models.storage_type != 'db':
         @property
         def cities(self):
             """Return the list of City objects from storage linked to the current State."""

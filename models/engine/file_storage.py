@@ -1,6 +1,23 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
+
+classes = {
+    'BaseModel': BaseModel,
+    'User': User,
+    'Place': Place,
+    'State': State,
+    'City': City,
+    'Amenity': Amenity,
+    'Review': Review
+}
 
 
 class FileStorage:
@@ -9,10 +26,9 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """returns the object dictionaries"""
+        """Returns the object dictionaries"""
         if cls is None:
             return self.__objects
-        
         cls_dict = {k: v for k, v in self.__objects.items() if isinstance(v, cls)}
         return cls_dict
 
@@ -28,46 +44,26 @@ class FileStorage:
             json.dump(temp, f)
 
     def delete(self, obj=None):
-        """ deletes object from __objects if it is in __objects"""
-        if obj is None:
-            return
+        """Deletes object from __objects if it is in __objects"""
         if obj:
             k = f"{obj.__class__.__name__}.{obj.id}"
-        if k in self.__objects:
-            del self.__objects[k]
+            if k in self.__objects:
+                del self.__objects[k]
 
     def reload(self):
         """Loads storage dictionary from file"""
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-
-        classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
         try:
             with open(self.__file_path, 'r') as f:
                 temp = json.load(f)
             for key, val in temp.items():
-                try:
-                    cls_name = val['__class__']
-                    if cls_name in classes:
-                        self.__objects[key] = classes[cls_name](**val)
-                except KeyError as e:
-                    print(f"Error loading {key}: Missing key {e}")
-                except Exception as e:
-                    print(f"Error loading {key}: {type(e).__name__}: {str(e)}")
+                cls_name = val['__class__']
+                if cls_name in classes:
+                    self.__objects[key] = classes[cls_name](**val)
         except FileNotFoundError:
-            self.__objects = {}  # Initialize as empty if file is missing
+            pass
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON: {str(e)}")
-            self.__objects = {}  # Handle invalid JSON content
 
     def close(self):
+        """Deserialize the JSON file to objects"""
         self.reload()

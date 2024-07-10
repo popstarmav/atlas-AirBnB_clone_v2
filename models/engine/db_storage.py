@@ -2,7 +2,6 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy.exc import SQLAlchemyError
 from models.base_model import Base
 from models.state import State
 from models.city import City
@@ -12,13 +11,13 @@ from models.place import Place
 from models.review import Review
 
 classes = {
-            "City": City,
-            "State": State,
-            "User": User,
-            "Place": Place,
-            "Review": Review,
-            "Amenity": Amenity,
-        }
+    "City": City,
+    "State": State,
+    "User": User,
+    "Place": Place,
+    "Review": Review,
+    "Amenity": Amenity,
+}
 
 class DBStorage:
     __engine = None
@@ -36,7 +35,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """query on the current database session"""
+        """Query on the current database session"""
         new_dict = {}
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
@@ -44,7 +43,7 @@ class DBStorage:
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
-        return (new_dict)
+        return new_dict
 
     def new(self, obj):
         self.__session.add(obj)
@@ -58,11 +57,9 @@ class DBStorage:
 
     def reload(self):
         Base.metadata.create_all(self.__engine)
-        print(" Tables should be created. ")
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(session_factory)
-        self.__session = Session
+        self.__session = scoped_session(session_factory)
     
     def close(self):
+        """Remove the current scoped session"""
         self.__session.remove()
-
